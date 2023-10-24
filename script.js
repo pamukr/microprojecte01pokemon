@@ -1,34 +1,24 @@
-const loadButton = document.getElementById('loadButton');
-const jsonOutput = document.getElementById('jsonOutput');
-
-// Ruta al archivo JSON local
-const jsonFile = 'pokemons.json';
-
 // Realiza una solicitud XMLHttpRequest para cargar el archivo
-const xhr = new XMLHttpRequest();
-xhr.open('GET', jsonFile, true);
-xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-        // Parsea el contenido JSON
-        const jsonObject = JSON.parse(xhr.responseText);
-        console.log("hola")
-        console.log(jsonObject);
+function getPokemons() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', "pokemons.json", false); // El tercer argumento es 'false' para solicitud síncrona
+    xhr.send();
 
-
-        let pkmLegendaris = 0;
-        let pkmNoLegendaris = 0;
-
-        jsonObject.forEach(function (pokemon) {
-            if (pokemon.is_legendary == 1) {
-                pkmLegendaris++;
-            } else {
-                pkmNoLegendaris++;
-            }
-        })
-
-        console.log(pkmNoLegendaris);
-        console.log(pkmLegendaris);
+    if (xhr.status === 200) {
+        // Parsea el contenido JSON y almacena en la variable global
+        return JSON.parse(xhr.responseText);
     }
-};
-xhr.send();
+}
+const pokemons = getPokemons();
 
+
+function getLegendaris(listapokemons) {
+    let legendaris = 0;
+    pokemons.forEach(function (pokemon) {
+        if (pokemon.is_legendary == 1) {
+            legendaris++;
+        }
+    })
+    return legendaris;
+}
+console.log(getLegendaris(pokemons));
