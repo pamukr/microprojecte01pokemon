@@ -139,24 +139,53 @@ function countmesDefensaSP() {
     return morespdefense;
 }
 
-var conceptes1 = ["2tipus", "primesgen", "ultimesgen", "mesdefensaf", "mesatacf", "mesdefensae", "mesatace", "countertipus"];
-var conceptes2 = ["alturahumana",]
+var conceptes1 = ["2tipus", "primesgen", "mesdefensaf", "mesatacf", "countertipus"];
+var conceptes2 = ["alturahumana", ""]
 
-function deletepokemons(parametre, resposta, info) {
-    conceptes1 = conceptes1.filter(function (concepte) { return concepte!==parametre})
-    if (parametre === "2tipus") {
-        if (resposta === true) {
-            pokemons = pokemons.filter(function (pokemon) { return pokemon.type2 != ""; });
-        } else {
-            pokemons = pokemons.filter(function (pokemon) { return pokemon.type2 == ""; });
-        }
-    }
+function deletepokemons(param, si, data) {
+    conceptes1 = conceptes1.filter(function (concepte) { return concepte !== parametre })
+    switch (param) {
+        case "2tipus":
+            if (si) {
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.type2 != ""; });
+            } else {
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.type2 == ""; });
+            }
+            break;
+        case "primesgen":
+            if (si) {
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.generation <= "3"; });
+            } else {
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.generation > "3"; });
+            }
+            break;
+        case "mesdefensaf":
+            if (si) {
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.defense > pokemon.sp_defense; });
+            } else {
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.defense <= pokemon.sp_defense; });
+            }
+            break;
+        case "mesatacf":
+            if (si) {
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.attack > pokemon.sp_attack; });
+            } else {
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.attack <= pokemon.sp_attack; });
+            }
+            break;
+        case "countertipus":
+            if (si) {
+                pokemons = pokemons.filter(function (pokemon) { return ["against_" + data] > 1 });
+            } else {
+                pokemons = pokemons.filter(function (pokemon) { return ["against_" + data] <= 1 });
+            }
+            break;
 
-    if(parametre === "primesgen"){
-
+        default:
+            console.log("Paràmatre no vàlid");
+            break;
     }
 }
-
 
 
 
@@ -180,5 +209,5 @@ function deletepokemons(parametre, resposta, info) {
 // console.log(countmesDefensaSP());
 
 console.log(pokemons);
-deletepokemons("2tipus",true);
+deletepokemons("2tipus", true);
 console.log(pokemons);
