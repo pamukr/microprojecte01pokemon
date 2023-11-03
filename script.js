@@ -54,7 +54,7 @@ function getInfoPokemon(param) {
                     return menys - més;
                 });
             }
-            return arranygen[arranygen.length-1].split(": "[0])[0];
+            return arranygen[arranygen.length - 1].split(": "[0])[0];
             break;
         case "n2Tipus":
             let tipus2 = 0;
@@ -78,13 +78,7 @@ function getInfoPokemon(param) {
                     return menys - més;
                 });
             }
-
-            if (arrayntipus instanceof Array && arrayntipus.length > 2) {
-                const grans = arrayntipus.slice(-4);
-                return (grans[Math.floor(Math.random() * grans.length)]).split(": "[0])[0];
-            } else {
-                return arrayntipus[0].split(": "[0])[0] || arrayntipus.split(": "[0])[0];
-            }
+            return arrayntipus[arrayntipus.length - 1].split(": "[0])[0];
             break;
 
         // Retorna el número de counters que té un tipus
@@ -104,12 +98,7 @@ function getInfoPokemon(param) {
                 });
             }
 
-            if (arraycounters instanceof Array && arraycounters.length > 2) {
-                const grans = arraycounters.slice(-4);
-                return (grans[Math.floor(Math.random() * grans.length)]).split(": "[0])[0];
-            } else {
-                return arraycounters[0] || arraycounters;
-            }
+            return arraycounters[arraycounters.length - 1].split(": "[0])[0];
             break;
         // Retorna el número de Pokémon que tenen l'altura 
         case "nHumanHeight":
@@ -117,10 +106,17 @@ function getInfoPokemon(param) {
             pokemons.forEach(function (pokemon) { if (pokemon.height_m > 1.2 && pokemon.height_m < 2) numHumanHeight++; })
             return numHumanHeight;
             break;
-        // Retorna un Pokémon que tingui un pes entre 15 i 40 kg
-        case "rWeightPokemon":
+        // Retorna sempre el pokémon del pes mig.
+        case "mWeightPokemon":
             pokemons.sort(function (a, b) {
                 return a.weight_kg - b.weight_kg;
+            })
+            return pokemons[Math.floor(pokemons.length / 2)];
+            break;
+        // Retorna sempre el pokémon de la velocitat del mig.
+        case "mSpeedPokemon":
+            pokemons.sort(function (a, b) {
+                return a.speed - b.speed;
             })
             return pokemons[Math.floor(pokemons.length / 2)];
             break;
@@ -207,9 +203,9 @@ function updatePokemons(param, si, data) {
             break;
         case "facilcapturar":
             if (si) {
-                pokemons = pokemons.filter(function (pokemon) { return pokemon.capture_rate >= 120 });
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.capture_rate > 80 });
             } else {
-                pokemons = pokemons.filter(function (pokemon) { return pokemon.capture_rate <= 150 });
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.capture_rate <= 120 });
             }
             break;
         case "moltavida":
@@ -267,45 +263,37 @@ function updatePokemons(param, si, data) {
     }
 }
 
-console.log("Llegendaris:");
-console.log(getInfoPokemon("nLegendaris"));
-console.log("Generació més gran:");
-console.log(getInfoPokemon("bigGen"));
-console.log("2tipus:");
-console.log(getInfoPokemon("n2Tipus"));
-console.log("Tipus gran aleatori:");
-console.log(getInfoPokemon("rBigTipus"));
-console.log("Counter gran aleatori:")
-console.log(getInfoPokemon("rBigCounter"));
-console.log("Mida humana:")
-console.log(getInfoPokemon("nHumanHeight"));
-console.log("Pokemon aleatori entre 15kg i 40kg")
-console.log(getInfoPokemon("rWeightPokemon"));
-console.log("Pokemons amb més atac especial")
-console.log(getInfoPokemon("nMoreSPAttack"));
-console.log("Pokemons amb més defensa especial:")
-console.log(getInfoPokemon("nMoreSPDefense"));
-
 var conceptes1 = ["2tipus", "lastgen", "mesdefensaf", "mesatacf", "counter", "pesames"];
 var conceptes2 = ["alturahumana", "rapid", "facilcapturar", "moltavida", "bonatacf", "bonatace", "bonadefensaf", "bonadefensae", "tipus", "gen", "counter", "pesames"];
+var conceptes3 = ["tipus", "descripció"]
+const preguntah1 = document.getElementById("preguntah1");
+const respostes = document.querySelectorAll('.resposta');
 
-const preguntah1 = docuemnt.getElementById("preguntah1");
-
+function novapregunta() {
+    if (conceptes1.length > 0) {
+        preguntar("2tipus"/*conceptes1[Math.floor(Math.random() * conceptes1.length)]*/);
+    }
+}
 function preguntar(param) {
-    conceptes1 = conceptes1.filter(function (concepte) { return concepte !== param })
+    conceptes1 = conceptes1.filter(function (concepte) { return concepte !== param });
+    data = "";
     switch (param) {
         case "2tipus":
             let preguntespos = ["El teu pokémon té dos tipus?", "El teu pokémon té més d'un tipus?"];
             let preguntesneg = ["El teu pokémon té només un tipus?", "El teu pokémon es d'un sol tipus?"];
-            let positiu = Math.floor(Math.random());
-            if(positiu == 0){
-                preguntah1.textContent = preguntespos[Math.floor(Math.random())];
-
-            }else{
+            let positiu = Math.random() < 0.5;;
+            if (positiu) {
+                preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            } else {
                 preguntah1.textContent = preguntesneg[Math.floor(Math.random())];
-
+                if (resposta != "idk") {
+                    if (resposta == "yes") {
+                        updatePokemons("2tipus", false);
+                    } else {
+                        updatePokemons("2tipus", true);
+                    }
+                }
             }
-
             break;
         case "lastgen":
             if (si) {
@@ -416,28 +404,47 @@ function preguntar(param) {
             console.log("Paràmatre no vàlid");
             break;
     }
+
+    respostes.forEach(button => {
+        button.addEventListener('click', () => {
+            const answer = button.getAttribute('answer');
+            if (answer != "idk") {
+                if (answer == "yes") {
+                    updatePokemons(param,positiu,data);
+                } else if (answer == "no") {
+                    updatePokemons(param,!positiu,data);
+                }
+            }
+            novapregunta();
+        });
+    });
 }
 
 console.log(pokemons);
-updatePokemons("2tipus", true);
+updatePokemons("2tipus", false);
 updatePokemons("mesdefensaf", false);
-updatePokemons("mesatacf", false);
-updatePokemons("lastgen", false);
+updatePokemons("mesatacf", true);
+updatePokemons("lastgen", true);
+updatePokemons("counter", false, "fight");
+updatePokemons("alturahumana", false);
+// updatePokemons("rapid", false);
+// updatePokemons("facilcapturar", true);
+// updatePokemons("moltavida", false);
+// updatePokemons("bonatacf", false);
+// updatePokemons("bonatace", false);
+// updatePokemons("bonadefensaf", false);
+// updatePokemons("bonadefensae", false);
+updatePokemons("pesames", true, 20);
+updatePokemons("tipus", false, "electric");
+updatePokemons("tipus", false, "grass");
+
+updatePokemons("counter", true, "flying");
+updatePokemons("gen", false, 5);
+console.log(getInfoPokemon("mWeightPokemon"));
 console.log(getInfoPokemon("rBigCounter"));
-updatePokemons("counter", true, "ice");
-updatePokemons("alturahumana", true);
-updatePokemons("rapid", false);
-updatePokemons("facilcapturar", false);
-updatePokemons("moltavida", false);
-updatePokemons("bonatacf", false);
-updatePokemons("bonatace", false);
-updatePokemons("bonadefensaf", false);
-updatePokemons("bonadefensae", false);
-console.log(getInfoPokemon("rWeightPokemon"));
 console.log(getInfoPokemon("rBigTipus"));
-updatePokemons("pesames", true, 40.8);
-updatePokemons("tipus", true, "flying");
-updatePokemons("gen", false, 1)
+console.log(getInfoPokemon("bigGen"));
+
 
 
 
