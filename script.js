@@ -509,3 +509,15 @@ function preguntar(param) {
 // console.log(getInfoPokemon("bigGen"));
 
 console.log(pokemons);
+
+let writing = str => {
+    let arrFromStr = str.split('');
+    let i = 0;
+    let printStr = setInterval(function() {
+        document.body.innerHTML += arrFromStr[i];
+        i++;
+        if (i == arrFromStr.length - 1) {
+            clearInterval(printStr);
+        }
+    }, 100);
+};
