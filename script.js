@@ -34,11 +34,7 @@ const arraytipus = [
 
 function getInfoPokemon(param) {
     switch (param) {
-        case "nLegendaris":
-            let legendaris = 0;
-            pokemons.forEach(function (pokemon) { if (pokemon.is_legendary == 1) legendaris++; })
-            return legendaris;
-            break;
+        //Retorna la generació amb més Pokémons.
         case "bigGen":
             let arranygen = [];
             for (let i = 1; i < 8; i++) {
@@ -56,32 +52,69 @@ function getInfoPokemon(param) {
             }
             return arranygen[arranygen.length - 1].split(": "[0])[0];
             break;
-        case "n2Tipus":
-            let tipus2 = 0;
-            pokemons.forEach(function (pokemon) { if (pokemon.type2 != "") tipus2++; })
-            return tipus2;
-            break;
 
-        // Retorna un dels 4 tipus amb més Pokémons
+        // Retorna un el tipus amb més Pokémons.
         case "bigTipus":
-            let arrayntipus = [];
-            arraytipus.forEach(function (tipus) {
-                let numTipus = 0;
-                pokemons.forEach(function (pokemon) { if (pokemon.type1 == tipus || pokemon.type2 == tipus) numTipus++; })
-                arrayntipus.push(tipus + ": " + numTipus);
-            });
-
-            if (arrayntipus instanceof Array) {
-                arrayntipus.sort(function (a, b) {
-                    var menys = parseInt(a.split(": ")[1]);
-                    var més = parseInt(b.split(": ")[1]);
-                    return menys - més;
+            {
+                let arrayntipus = [];
+                arraytipus.forEach(function (tipus) {
+                    let numTipus = 0;
+                    pokemons.forEach(function (pokemon) { if (pokemon.type1 == tipus || pokemon.type2 == tipus) numTipus++; })
+                    arrayntipus.push(tipus + ": " + numTipus);
                 });
+
+                if (arrayntipus instanceof Array) {
+                    arrayntipus.sort(function (a, b) {
+                        var menys = parseInt(a.split(": ")[1]);
+                        var més = parseInt(b.split(": ")[1]);
+                        return menys - més;
+                    });
+                }
+                return arrayntipus[arrayntipus.length - 1].split(": "[0])[0];
             }
-            return arrayntipus[arrayntipus.length - 1].split(": "[0])[0];
             break;
 
-        // Retorna el número de counters que té un tipus
+        case "bigTipus1":
+            {
+                let arrayntipus = [];
+                arraytipus.forEach(function (tipus) {
+                    let numTipus = 0;
+                    pokemons.forEach(function (pokemon) { if (pokemon.type1 == tipus) numTipus++; })
+                    arrayntipus.push(tipus + ": " + numTipus);
+                });
+
+                if (arrayntipus instanceof Array) {
+                    arrayntipus.sort(function (a, b) {
+                        var menys = parseInt(a.split(": ")[1]);
+                        var més = parseInt(b.split(": ")[1]);
+                        return menys - més;
+                    });
+                }
+                return arrayntipus[arrayntipus.length - 1].split(": "[0])[0];
+            }
+            break;
+
+        case "bigTipus2":
+            {
+                let arrayntipus = [];
+                arraytipus.forEach(function (tipus) {
+                    let numTipus = 0;
+                    pokemons.forEach(function (pokemon) { if (pokemon.type2 == tipus) numTipus++; })
+                    arrayntipus.push(tipus + ": " + numTipus);
+                });
+
+                if (arrayntipus instanceof Array) {
+                    arrayntipus.sort(function (a, b) {
+                        var menys = parseInt(a.split(": ")[1]);
+                        var més = parseInt(b.split(": ")[1]);
+                        return menys - més;
+                    });
+                }
+                return arrayntipus[arrayntipus.length - 1].split(": "[0])[0];
+            }
+            break;
+
+        // Retorna el counter que tenen la majoria de pokémons
         case "bigCounter":
             let arraycounters = [];
             arraytipus.forEach(function (tipus) {
@@ -97,15 +130,9 @@ function getInfoPokemon(param) {
                     return menys - més;
                 });
             }
-
             return arraycounters[arraycounters.length - 1].split(": "[0])[0];
             break;
-        // Retorna el número de Pokémon que tenen l'altura 
-        case "nHumanHeight":
-            let numHumanHeight = 0;
-            pokemons.forEach(function (pokemon) { if (pokemon.height_m > 1.2 && pokemon.height_m < 2) numHumanHeight++; })
-            return numHumanHeight;
-            break;
+
         // Retorna sempre el pokémon del pes mig.
         case "mWeightPokemon":
             pokemons.sort(function (a, b) {
@@ -113,37 +140,32 @@ function getInfoPokemon(param) {
             })
             return pokemons[Math.floor(pokemons.length / 2)];
             break;
-        // Retorna sempre el pokémon de la velocitat del mig.
-        case "mSpeedPokemon":
-            pokemons.sort(function (a, b) {
-                return a.speed - b.speed;
-            })
-            return pokemons[Math.floor(pokemons.length / 2)];
+
+        //Només hi ha una generació
+        case "gentrobada":
+            generation = pokemons[0].generation;
+            pokemons.forEach(function (pokemon) { if (pokemon.generation != generation) return false; });
+            return true;
             break;
-        // Retorna el número de Pokémons que tenen més AttackSP que AttackFísic
-        case "nMoreSPAttack":
-            morespattack = 0;
-            pokemons.forEach(function (pokemon) {
-                if (pokemon.sp_attack > pokemon.attack) {
-                    morespattack++;
-                }
-            })
-            return morespattack;
+
+        //Només hi ha un tipus1
+        case "tipus1trobat":
+            tipus = pokemons[0].type1;
+            pokemons.forEach(function (pokemon) { if (pokemon.type1 != tipus) return false; });
+            return true;
             break;
-        // Retorna el número de Pokémons que tenen més DefensaSP que DefensaFísica
-        case "nMoreSPDefense":
-            morespdefense = 0;
-            pokemons.forEach(function (pokemon) {
-                if (pokemon.sp_defense > pokemon.defense) {
-                    morespdefense++;
-                }
-            })
-            return morespdefense;
+
+        //Només hi ha un tipus2
+        case "tipus2trobat":
+            tipus = pokemons[0].type2;
+            pokemons.forEach(function (pokemon) { if (pokemon.type2 != tipus) return false; });
+            return true;
             break;
     }
 }
 
 function updatePokemons(param, si, data) {
+    console.log(param, si, data);
     switch (param) {
         case "2tipus":
             if (si) {
@@ -198,7 +220,7 @@ function updatePokemons(param, si, data) {
             if (si) {
                 pokemons = pokemons.filter(function (pokemon) { return pokemon.speed > 50 });
             } else {
-                pokemons = pokemons.filter(function (pokemon) { return pokemon.speed < 70 });
+                pokemons = pokemons.filter(function (pokemon) { return pokemon.speed < 80 });
             }
             break;
         case "facilcapturar":
@@ -252,9 +274,16 @@ function updatePokemons(param, si, data) {
             break;
         case "gen":
             if (si) {
-                pokemons = pokemons.filter(function (pokemon) { return pokemon.generation == data });
+                pokemons = pokemons.filter(function (pokemon) { return parseInt(pokemon.generation) == data });
             } else {
-                pokemons = pokemons.filter(function (pokemon) { return pokemon.generation != data });
+                pokemons = pokemons.filter(function (pokemon) { return parseInt(pokemon.generation) != data });
+            }
+            break;
+        case "descripcio":
+            if (si) {
+                pokemons = pokemons[0];
+            } else {
+                pokemons.shift();
             }
             break;
         default:
@@ -266,23 +295,38 @@ function updatePokemons(param, si, data) {
 var conceptes1 = ["2tipus", "lastgen", "counter", "pesames"];
 var conceptes2 = ["alturahumana", "rapid", "facilcapturar"];
 var conceptes3 = ["moltavida", "bonatacf", "bonatace", "bonadefensaf", "bonadefensae", "tipus", "gen", "counter", "pesames", "mesatacf", "mesdefensaf"];
-var conceptes4 = ["tipus", "descripció", "gen"];
+var conceptes4 = ["tipus", "descripcio", "gen"];
 const preguntah1 = document.getElementById("preguntah1");
 const respostes = document.getElementById("respostes");
 
 function novapregunta() {
+    var param = "";
     console.log(pokemons);
-    if (pokemons.length > 5) {
-        if (conceptes1.length > 0) {
-            var param = conceptes1[Math.floor(Math.random() * conceptes1.length)];
-            conceptes1 = conceptes1.filter(function (concepte) { return concepte !== param });
-            preguntar(param);
-            console.log(conceptes1);
-        } else if (conceptes2.length > 0) {
-
+    if (Array.isArray(pokemons)) {
+        if (pokemons.length > 5 && conceptes3.length > 0) {
+            if (conceptes1.length > 0) {
+                param = conceptes1[Math.floor(Math.random() * conceptes1.length)];
+                conceptes1 = conceptes1.filter(function (concepte) { return concepte !== param });
+            } else if (conceptes2.length > 0) {
+                param = conceptes2[Math.floor(Math.random() * conceptes2.length)];
+                conceptes2 = conceptes2.filter(function (concepte) { return concepte !== param });
+            } else if (conceptes3.length > 0) {
+                param = conceptes3[Math.floor(Math.random() * conceptes3.length)];
+                conceptes3 = conceptes3.filter(function (concepte) { return concepte !== param });
+            }
+        } else {
+            if (getInfoPokemon("tipus1trobat") && getInfoPokemon("tipus2trobat")) {
+                conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "tipus" });
+            }
+            if (getInfoPokemon("gentrobada")) {
+                conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "gen" });
+            }
+            param = conceptes4[Math.floor(Math.random() * conceptes4.length)];
         }
-    }else{
-        //Preguntes quan hi han menys de 5 pokemons.
+        console.log(param);
+        preguntar(param);
+    } else {
+        preguntah1.textContent = "El teu pokémon és " + pokemons.name;
     }
 }
 novapregunta();
@@ -346,12 +390,12 @@ function preguntar(param) {
             }
             break;
         case "alturahumana":
-            preguntespos = ["El teu pokémon pesa té una altura similar a un humà promig(1.2M-2M)?", "El teu pokémon és igual d'alt que un humà?(Entre 1.2 i 2 metres)"];
+            preguntespos = ["El teu pokémon té una altura similar a un humà promig(1.2M-2M)?", "El teu pokémon és igual d'alt que un humà?(Entre 1.2 i 2 metres)"];
             positiu = true;
             preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
             break;
         case "rapid":
-            preguntespos = ["El teu pokémon pesa té una altura similar a un humà promig(1.2M-2M)?", "El teu pokémon és igual d'alt que un humà?(Entre 1.2 i 2 metres)"];
+            preguntespos = ["El teu pokémon és ràpid?", "El teu pokémon corre considerablement?"];
             positiu = true;
             preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
             break;
@@ -381,21 +425,31 @@ function preguntar(param) {
             preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
             break;
         case "bonadefensae":
-            preguntespos = ["El teu pokémon pesa té una bona defensa especial?", "El teu pokémon té una defensa especial elevada?"];
+            preguntespos = ["El teu pokémon té una bona defensa especial?", "El teu pokémon té una defensa especial elevada?"];
             positiu = true;
             preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
             break;
         case "tipus":
-            data = getInfoPokemonData("bigTipus")
+            data = getInfoPokemon("bigTipus")
+            if (getInfoPokemon("tipus1trobat")) {
+                data = getInfoPokemon("bigTipus2")
+            }
+            if (getInfoPokemon("tipus2trobat")) {
+                data = getInfoPokemon("bigTipus1")
+            }
             preguntespos = ["El teu pokémon és de tipus \"" + data + "\"?", "El teu pokémon és \"" + data + "\"?"];
             positiu = true;
             preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
             break;
         case "gen":
-            data = getInfoPokemonData("bigGen")
+            data = getInfoPokemon("bigGen")
             preguntespos = ["El teu pokémon és de la generació " + data + "?", "El teu pokémon pertany a la generació " + data + "?"];
             positiu = true;
             preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            break;
+        case "descripcio":
+            positiu = true;
+            preguntah1.textContent = "El teu pokémon s'el coneix com \"" + (pokemons[0].classfication).replace(" Pokémon", "") + "\"?";
             break;
         default:
             console.log("Paràmatre no vàlid");
@@ -415,13 +469,16 @@ function preguntar(param) {
 
     yesbutton.addEventListener("click", function () {
         updatePokemons(param, positiu, data);
+        console.log(data);
         novapregunta();
     })
     nobutton.addEventListener("click", function () {
         updatePokemons(param, !positiu, data);
+        console.log(data);
         novapregunta();
     })
     idkbutton.addEventListener("click", function () {
+        console.log(data);
         novapregunta();
     })
 
@@ -446,7 +503,6 @@ function preguntar(param) {
 // updatePokemons("tipus", false, "grass");
 
 // updatePokemons("counter", true, "flying");
-// updatePokemons("gen", false, 5);
 // console.log(getInfoPokemon("mWeightPokemon"));
 // console.log(getInfoPokemon("bigCounter"));
 // console.log(getInfoPokemon("bigTipus"));
