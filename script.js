@@ -144,22 +144,19 @@ function getInfoPokemon(param) {
         //Només hi ha una generació
         case "gentrobada":
             generation = pokemons[0].generation;
-            pokemons.forEach(function (pokemon) { if (pokemon.generation != generation) return false; });
-            return true;
+            return pokemons.every(function (pokemon) { return pokemon.generation === generation; });
             break;
 
         //Només hi ha un tipus1
         case "tipus1trobat":
             tipus = pokemons[0].type1;
-            pokemons.forEach(function (pokemon) { if (pokemon.type1 != tipus) return false; });
-            return true;
+            return pokemons.every(function (pokemon) { return pokemon.type1 === tipus; });
             break;
 
         //Només hi ha un tipus2
         case "tipus2trobat":
             tipus = pokemons[0].type2;
-            pokemons.forEach(function (pokemon) { if (pokemon.type2 != tipus) return false; });
-            return true;
+            return pokemons.every(function (pokemon) { return pokemon.type2 === tipus; });
             break;
     }
 }
@@ -302,7 +299,7 @@ const respostes = document.getElementById("respostes");
 function novapregunta() {
     var param = "";
     console.log(pokemons);
-    if (Array.isArray(pokemons)) {
+    if (Array.isArray(pokemons)&&pokemons.length>1) {
         if (pokemons.length > 5 && conceptes3.length > 0) {
             if (conceptes1.length > 0) {
                 param = conceptes1[Math.floor(Math.random() * conceptes1.length)];
@@ -316,20 +313,67 @@ function novapregunta() {
             }
         } else {
             if (getInfoPokemon("tipus1trobat") && getInfoPokemon("tipus2trobat")) {
+                console.log("Tipus trobat");
                 conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "tipus" });
             }
             if (getInfoPokemon("gentrobada")) {
+                console.log("Tipus trobat");
                 conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "gen" });
             }
             param = conceptes4[Math.floor(Math.random() * conceptes4.length)];
         }
-        console.log(param);
         preguntar(param);
     } else {
-        preguntah1.textContent = "El teu pokémon és " + pokemons.name;
+        enviarmsg("El teu pokémon és " + pokemons.name||pokemons[0].name,"https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemons.pokedex_number.padStart(3, '0')||pokemons[0].pokedex_number.padStart(3, '0')+ ".png");
     }
 }
-novapregunta();
+
+function enviarmsg(msgtext, source) {
+    console.log(msgtext);
+    console.log(source);
+    let leftmsg = document.createElement("div");
+    leftmsg.classList.add("msg-left");
+    let msg = document.createElement("div");
+    msg.classList.add("msg");
+    leftmsg.appendChild(msg);
+
+    if (source) {
+        let img = document.createElement("img");
+        img.src = source;
+        msg.appendChild(img);
+    }
+
+    let text = document.createElement("p");
+    msg.appendChild(text);
+    document.getElementById("content").appendChild(leftmsg);
+
+    //Efecte escriure
+    let index = 0;
+    let interval = setInterval(function () {
+        if (index < msgtext.length) {
+            text.textContent += msgtext[index];
+            index++;
+        } else {
+            clearInterval(interval);
+        }
+    }, 20);
+}
+
+function ans(resposta) {
+    let leftmsg = document.createElement("div");
+    leftmsg.classList.add("msg-right");
+
+    let msg = document.createElement("div");
+    msg.classList.add("msg");
+    leftmsg.appendChild(msg);
+
+    let text = document.createElement("p");
+    text.textContent = resposta;
+    msg.appendChild(text);
+    document.getElementById("content").appendChild(leftmsg);
+
+}
+
 function preguntar(param) {
     data = "";
     var preguntespos = [];
@@ -340,43 +384,43 @@ function preguntar(param) {
             preguntespos = ["El teu pokémon té dos tipus?", "El teu pokémon té més d'un tipus?"];
             preguntesneg = ["El teu pokémon té només un tipus?", "El teu pokémon és d'un sol tipus?"];
             if (positiu) {
-                preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             } else {
-                preguntah1.textContent = preguntesneg[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntesneg[Math.floor(Math.random() * 2)]);
             }
             break;
         case "lastgen":
             preguntespos = ["El teu pokémon és de la generació 4 o superior?", "El teu pokémon pertany a una generació entre la 4 i la 7? Ambdues incloses."];
             preguntesneg = ["El teu pokémon és de la generació 3 o inferior?", "El teu pokémon pertany a les tres primeres generacions?"];
             if (positiu) {
-                preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             } else {
-                preguntah1.textContent = preguntesneg[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntesneg[Math.floor(Math.random() * 2)]);
             }
             break;
         case "mesdefensaf":
             preguntespos = ["El teu pokémon té més defensa física que especial?", "El teu pokémon té menys defensa especial que física?"];
             preguntesneg = ["El teu pokémon té més defensa especial que física?", "El teu pokémon té menys defensa física que especial?"];
             if (positiu) {
-                preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             } else {
-                preguntah1.textContent = preguntesneg[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntesneg[Math.floor(Math.random() * 2)]);
             }
             break;
         case "mesatacf":
             preguntespos = ["El teu pokémon té més atac físic que especial?", "El teu pokémon té menys atac especial que físic?"];
             preguntesneg = ["El teu pokémon té més atac especial que físic?", "El teu pokémon té menys atac físic que especial?"];
             if (positiu) {
-                preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             } else {
-                preguntah1.textContent = preguntesneg[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntesneg[Math.floor(Math.random() * 2)]);
             }
             break;
         case "counter":
             data = getInfoPokemon("bigCounter");
             preguntespos = ["Al teu pokémon li fan counter els pokémon de tipus " + data + "?", "El teu pokémon es débil contra els pokémon de tipus " + data + "?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "pesames":
             data = getInfoPokemon("mWeightPokemon");
@@ -384,50 +428,50 @@ function preguntar(param) {
             preguntespos = ["El teu pokémon pesa més que " + data.name + "?(" + data.weight_kg + " kg)", "El teu pokémon és més pesat que " + data.name + "?(" + data.weight_kg + " kg)"];
             preguntesneg = ["El teu pokémon pesa menys que " + data.name + "?(" + data.weight_kg + " kg)", "El teu pokémon és més lleuger que " + data.name + "?(" + data.weight_kg + " kg)"];
             if (positiu) {
-                preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntespos[Math.floor(Math.random() * 2)], "https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + data.pokedex_number.padStart(3, '0') + ".png");
             } else {
-                preguntah1.textContent = preguntesneg[Math.floor(Math.random() * 2)];
+                enviarmsg(preguntesneg[Math.floor(Math.random() * 2)], "https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + data.pokedex_number.padStart(3, '0') + ".png");
             }
             break;
         case "alturahumana":
             preguntespos = ["El teu pokémon té una altura similar a un humà promig(1.2M-2M)?", "El teu pokémon és igual d'alt que un humà?(Entre 1.2 i 2 metres)"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "rapid":
             preguntespos = ["El teu pokémon és ràpid?", "El teu pokémon corre considerablement?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "facilcapturar":
             preguntespos = ["El teu pokémon és relativament fàcil de capturar?", "Es captura fàcilment?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "moltavida":
             preguntespos = ["El teu pokémon té molta vida?", "El teu pokémon té una vida elevada?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "bonatacf":
             preguntespos = ["El teu pokémon té un bon atac físic?", "El teu pokémon té un atac físic elevat?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "bonatace":
             preguntespos = ["El teu pokémon té un bon atac especial?", "El teu pokémon té un atac especial elevat?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "bonadefensaf":
             preguntespos = ["El teu pokémon té una bona defensa física?", "El teu pokémon té una defensa física elevada?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "bonadefensae":
             preguntespos = ["El teu pokémon té una bona defensa especial?", "El teu pokémon té una defensa especial elevada?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "tipus":
             data = getInfoPokemon("bigTipus")
@@ -437,19 +481,18 @@ function preguntar(param) {
             if (getInfoPokemon("tipus2trobat")) {
                 data = getInfoPokemon("bigTipus1")
             }
-            preguntespos = ["El teu pokémon és de tipus \"" + data + "\"?", "El teu pokémon és \"" + data + "\"?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg("El teu pokémon és de tipus \"" + data + "\"?");
             break;
         case "gen":
             data = getInfoPokemon("bigGen")
             preguntespos = ["El teu pokémon és de la generació " + data + "?", "El teu pokémon pertany a la generació " + data + "?"];
             positiu = true;
-            preguntah1.textContent = preguntespos[Math.floor(Math.random() * 2)];
+            enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
         case "descripcio":
             positiu = true;
-            preguntah1.textContent = "El teu pokémon s'el coneix com \"" + (pokemons[0].classfication).replace(" Pokémon", "") + "\"?";
+            enviarmsg("El teu pokémon s'el coneix com \"" + (pokemons[0].classfication).replace(" Pokémon", "") + "\"?");
             break;
         default:
             console.log("Paràmatre no vàlid");
@@ -469,16 +512,16 @@ function preguntar(param) {
 
     yesbutton.addEventListener("click", function () {
         updatePokemons(param, positiu, data);
-        console.log(data);
+        ans("Si");
         novapregunta();
     })
     nobutton.addEventListener("click", function () {
         updatePokemons(param, !positiu, data);
-        console.log(data);
+        ans("No");
         novapregunta();
     })
     idkbutton.addEventListener("click", function () {
-        console.log(data);
+        ans("No ho sé");
         novapregunta();
     })
 
@@ -507,17 +550,7 @@ function preguntar(param) {
 // console.log(getInfoPokemon("bigCounter"));
 // console.log(getInfoPokemon("bigTipus"));
 // console.log(getInfoPokemon("bigGen"));
+novapregunta();
+
 
 console.log(pokemons);
-
-let writing = str => {
-    let arrFromStr = str.split('');
-    let i = 0;
-    let printStr = setInterval(function() {
-        document.body.innerHTML += arrFromStr[i];
-        i++;
-        if (i == arrFromStr.length - 1) {
-            clearInterval(printStr);
-        }
-    }, 100);
-};

@@ -1,6 +1,6 @@
 :root {
     --groc: #ffcc03;
-    --vermell: #c00d0d;
+    --vermell: #F15D49;
     --blau: #0086D4;
 }
 
@@ -9,12 +9,27 @@
     src: url(src/font/orange\ kid.otf);
 }
 
-body {
-    font-family: 'Orange Kid';
+@font-face {
+    font-family: 'Pokémon';
+    src: url(src/font/Pokemon\ Solid.ttf);
 }
 
 * {
+    text-align: center;
+    scroll-behavior: smooth;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    text-decoration: none;
     box-sizing: border-box;
+}
+
+body {
+    background-image: url("src/img/background.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: 'Orange Kid';
 }
 
 .pokeball {
@@ -34,6 +49,158 @@ body {
         shake 1.25s cubic-bezier(0.36, 0.07, 0.19, 0.97) 1.5s 3,
         catch 0.5s ease-out 5.25s forwards;
 }
+
+#title {
+    height: 20vh;
+    height: 120px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    /* Para Edge, Firefox, Opera, Brave */
+}
+
+.container {
+    height: 70vh;
+    display: flex;
+    margin: 0px 10% 0px 10%;
+}
+
+#ash {
+    display: flex;
+    align-items: end;
+    width: 29%;
+}
+
+#ash img {
+    height: 450px;
+    transform: scaleX(-1);
+}
+
+/*Pokédex*/
+#pokedex {
+    width: 70%;
+    height: 70vh;
+}
+
+#content{
+    box-shadow: 0 0 0 4px black; /* Anaranjado, ancho de borde de 4px */
+    background: black;
+    background-image: url(src/img/pokedex-bg.jpg);
+    border-radius: 15px 15px 0px 0px;
+    border: var(--vermell) solid;
+    border-width: 40px 40px 0px 40px;
+    height: 80%;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#content::-webkit-scrollbar {
+    display: none;
+}
+
+#content::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.msg-left {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.msg-right {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.msg {
+    max-width: 70%;
+    font-size: 27px;
+    padding: 15px;
+    margin: 15px;
+}
+
+.msg img{
+    width: 50%;
+}
+
+.msg-left .msg p {
+    text-align: left;
+}
+
+.msg-right .msg p {
+    text-align: center;
+}
+
+.msg-left .msg {
+    border-radius: 15px 15px 15px 0px;
+    background-color: #FCBF49
+}
+
+.msg-right .msg {
+    border-radius: 15px 15px 0px 15px;
+    min-width: 60px;
+    color: white;
+    background-color: #121212;
+}
+
+
+#bot {
+    box-shadow: 0 0 0 4px black; /* Anaranjado, ancho de borde de 4px */
+    height: 40px;
+    border-radius: 0px 0px 15px 15px;
+    background-color: var(--vermell);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.litle {
+    margin: 10px;
+    background-color: white;
+    cursor: pointer;
+    height: 10px;
+    width: 10px;
+    border-radius: 35px;
+}
+
+.big {
+    margin: 10px;
+    background-color: white;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    border-radius: 35px;
+}
+
+#respostes {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#respostes button {
+    margin-top: 10px;
+    color: var(--groc);
+    font-size: 40px;
+    width: 30%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orange Kid';
+    border-radius: 5px;
+    background-color: var(--blau);
+    cursor: pointer;
+}
+
+#respostes button:hover {}
 
 /* Animation */
 @keyframes shake {
