@@ -6,11 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akinator - Pokemon</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/2cb8249373.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
-    <img id="title" src="src/img/Pokinator.png">
+<body onload="iniciarPagina()">
+    <div class="header">
+        <img id="title" src="src/img/Pokinator.png">
+        <div class="buttons">
+            <button id="btnVolume"><i id="iVolume" class="fa-solid fa-volume-high"></i></button>
+            <audio id="audio" autoplay>
+                <source src="src/audio/whos-that-pokemon_.mp3" type="audio/mp3">
+            </audio>
+            <div id="contenidorBoto">
+                <button id="btnInfo" onmouseover="mostrarImatge()" onmouseout="ocultarImatge()"><i class="fa-solid fa-info"></i></button>
+                <div id="imatgeContainer">
+                    <img src="src/img/counters.jpg" alt="Counters" id="imatge">
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
+        <div class="barraProgres">
+            <div class="progres" id="progres"></div>
+        </div>
         <div id="ash">
             <img src="src/img/Ash_Ketchum_Journeys.png" alt="">
         </div>

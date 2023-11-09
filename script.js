@@ -299,7 +299,7 @@ const respostes = document.getElementById("respostes");
 function novapregunta() {
     var param = "";
     console.log(pokemons);
-    if (Array.isArray(pokemons)&&pokemons.length>1) {
+    if (Array.isArray(pokemons) && pokemons.length > 1) {
         if (pokemons.length > 5 && conceptes3.length > 0) {
             if (conceptes1.length > 0) {
                 param = conceptes1[Math.floor(Math.random() * conceptes1.length)];
@@ -324,7 +324,7 @@ function novapregunta() {
         }
         preguntar(param);
     } else {
-        enviarmsg("El teu pokémon és " + pokemons.name||pokemons[0].name,"https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemons.pokedex_number.padStart(3, '0')||pokemons[0].pokedex_number.padStart(3, '0')+ ".png");
+        enviarmsg("El teu pokémon és " + pokemons.name || pokemons[0].name, "https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemons.pokedex_number.padStart(3, '0') || pokemons[0].pokedex_number.padStart(3, '0') + ".png");
     }
 }
 
@@ -513,15 +513,18 @@ function preguntar(param) {
     yesbutton.addEventListener("click", function () {
         updatePokemons(param, positiu, data);
         ans("Si");
+        actualitzarProgres();
         novapregunta();
     })
     nobutton.addEventListener("click", function () {
         updatePokemons(param, !positiu, data);
         ans("No");
+        actualitzarProgres();
         novapregunta();
     })
     idkbutton.addEventListener("click", function () {
         ans("No ho sé");
+        actualitzarProgres();
         novapregunta();
     })
 
@@ -552,5 +555,25 @@ function preguntar(param) {
 // console.log(getInfoPokemon("bigGen"));
 novapregunta();
 
+
+/* Botons */
+const btnVolume = document.getElementById("btnVolume");
+const btnInfo = document.getElementById("btnInfo");
+
+btnVolume.addEventListener("click", () => {
+    document.getElementById("iVolume").classList.toggle("fa-volume-xmark");
+    
+    
+})
+
+function mostrarImatge() {
+    var imatgeContainer = document.getElementById("imatgeContainer");
+    imatgeContainer.style.display = "block";
+}
+
+function ocultarImatge() {
+    var imatgeContainer = document.getElementById("imatgeContainer");
+    imatgeContainer.style.display = "none";
+}
 
 console.log(pokemons);
