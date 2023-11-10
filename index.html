@@ -9,16 +9,17 @@
     <script src="https://kit.fontawesome.com/2cb8249373.js" crossorigin="anonymous"></script>
 </head>
 
-<body onload="iniciarPagina()">
-    <div class="header">
+<body>
+    <div id="header">
+        <div class="spacer" style="width:130px"></div>
         <img id="title" src="src/img/Pokinator.png">
         <div class="buttons">
             <button id="btnVolume"><i id="iVolume" class="fa-solid fa-volume-high"></i></button>
-            <audio id="audio" autoplay>
-                <source src="src/audio/whos-that-pokemon_.mp3" type="audio/mp3">
+            <audio id="audio" autoplay loop>
+                <source src="src/audio/route3.mp3" type="audio/mp3">
             </audio>
             <div id="contenidorBoto">
-                <button id="btnInfo" onmouseover="mostrarImatge()" onmouseout="ocultarImatge()"><i class="fa-solid fa-info"></i></button>
+                <button id="btnInfo"><i class="fa-solid fa-info"></i></button>
                 <div id="imatgeContainer">
                     <img src="src/img/counters.jpg" alt="Counters" id="imatge">
                 </div>
@@ -26,8 +27,8 @@
         </div>
     </div>
     <div class="container">
-        <div class="barraProgres">
-            <div class="progres" id="progres"></div>
+        <div id="barra">
+            <div id="progress"></div>
         </div>
         <div id="ash">
             <img src="src/img/Ash_Ketchum_Journeys.png" alt="">
@@ -39,8 +40,8 @@
                 <div class="litle"></div>
                 <div class="big"></div>
                 <div class="litle"></div>
+                <div id="respostes"></div>
             </div>
-            <div id="respostes"></div>
         </div>
     </div>
     <script src="script.js"></script>

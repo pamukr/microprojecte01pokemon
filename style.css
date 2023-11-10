@@ -50,31 +50,8 @@ body {
         catch 0.5s ease-out 5.25s forwards;
 }
 
-/* Header */
-
-#title {
-    height: 10vh;
-    margin-left: auto;
-    margin-right: auto;
-    /* Para Edge, Firefox, Opera, Brave */
-}
-
-button {
-    height: 50px;
-    width: 50px;
-    background-color: lightgrey;
-    border-radius: 35px;
-}
-
-#btnVolume:hover {
-    cursor: pointer;
-}
-
-button i {
-    font-size: 20px;
-}
-
-.header {
+#header {
+    padding-top: 20px;
     display: flex;
     height: 15vh;
     align-items: center;
@@ -89,50 +66,84 @@ button i {
     margin: 10px;
 }
 
+.buttons button {
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    border-radius: 35px;
+}
+
+#btnVolume {
+    background-color: lightgrey;
+}
+
+#btnInfo{
+    transition: all 0.5s;
+    background-color: var(--groc);
+    border: 4px solid var(--blau)
+}
+
+#btnInfo:hover{
+    background-color: var(--blau);
+    border: 4px solid var(--groc)
+}
+
+.buttons button i {
+    font-size: 20px;
+}
+
 #contenidorBoto {
     position: relative;
     display: inline-block;
-  }
-  
-  #imatgeContainer {
+}
+
+#btnInfo:hover+#imatgeContainer {
+    display: block;
+}
+
+#imatgeContainer {
     display: none;
     position: absolute;
-    top: 100%; /* Coloca la imagen debajo del botón */
+    top: 100%;
     right: 0;
-    margin-top: 10px; /* Ajusta según sea necesario */
-  }
-  
-  #imatge {
-    width: 200px; /* Ajusta según sea necesario */
+    margin-top: 10px;
+}
+
+#imatge {
+    width: 200px;
     height: auto;
     border-radius: 10px;
     border: 2px solid white;
-  }
-  
-/* Container */
+}
+
+#title {
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .container {
-    height: 85vh;
+    height: 75vh;
     display: flex;
-    margin: 0px 10% 0px 10%;
-    align-items: center;
     flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0px 10% 0px 10%;
 }
 
-.barraProgres {
+#barra {
+    margin: 20px 0px 20px 0px;
     width: 100%;
     height: 30px;
-    background-color: #f0f0f0;
+    background-color: white;
     border-radius: 15px;
+    overflow: hidden;
 }
 
-.progres {
-    height: 100%;
-    width: 0%;
-    max-width: 100%;
-    background-color: #4caf50;
-    border-radius: 15px;
-    transition: width 0.3s ease;
+#progress {
+    transition: all 1s;
+    width: 0px;
+    height: 30px;
+    background-color: var(--groc);
 }
 
 #ash {
@@ -226,53 +237,57 @@ button i {
 #bot {
     box-shadow: 0 0 0 4px black;
     /* Anaranjado, ancho de borde de 4px */
-    height: 40px;
+    height: 15vh;
     border-radius: 0px 0px 15px 15px;
     background-color: var(--vermell);
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .litle {
-    margin: 10px;
     background-color: white;
-    cursor: pointer;
     height: 10px;
     width: 10px;
     border-radius: 35px;
 }
 
 .big {
-    margin: 10px;
+    margin: 0px 20px;
     background-color: white;
-    cursor: pointer;
     height: 20px;
     width: 20px;
     border-radius: 35px;
 }
 
 #respostes {
+    height: 50%;
+    width: 100%;
     display: flex;
     justify-content: space-evenly;
 }
 
 #respostes button {
-    margin-top: 10px;
-    color: var(--groc);
+    color: white;
+    background: #7C7C7C;
+    border-bottom: 6px inset rgba(0, 0, 0, .5);
+    border-left: 6px inset rgba(0, 0, 0, .5);
+    border-right: 6px inset rgba(255, 255, 255, .5);
+    border-top: 6px inset rgba(255, 255, 255, .5);
+    box-sizing: border-box;
     font-size: 40px;
     width: 30%;
-    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Orange Kid';
-    border-radius: 5px;
-    background-color: var(--blau);
     cursor: pointer;
 }
 
-#respostes button:hover {}
+#respostes button:hover {
+    background: #BCBCBC;
+}
 
 /* Animation */
 @keyframes shake {

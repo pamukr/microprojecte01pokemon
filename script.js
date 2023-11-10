@@ -32,6 +32,9 @@ const arraytipus = [
     "flying"
 ]
 
+var tipuspreguntats = [];
+var counterspreguntats = [];
+
 function getInfoPokemon(param) {
     switch (param) {
         //Retorna la generació amb més Pokémons.
@@ -58,9 +61,11 @@ function getInfoPokemon(param) {
             {
                 let arrayntipus = [];
                 arraytipus.forEach(function (tipus) {
-                    let numTipus = 0;
-                    pokemons.forEach(function (pokemon) { if (pokemon.type1 == tipus || pokemon.type2 == tipus) numTipus++; })
-                    arrayntipus.push(tipus + ": " + numTipus);
+                    if (!tipuspreguntats.includes(tipus)) {
+                        let numTipus = 0;
+                        pokemons.forEach(function (pokemon) { if (pokemon.type1 == tipus || pokemon.type2 == tipus) numTipus++; })
+                        arrayntipus.push(tipus + ": " + numTipus);
+                    }
                 });
 
                 if (arrayntipus instanceof Array) {
@@ -71,6 +76,7 @@ function getInfoPokemon(param) {
                     });
                 }
                 return arrayntipus[arrayntipus.length - 1].split(": "[0])[0];
+
             }
             break;
 
@@ -78,9 +84,11 @@ function getInfoPokemon(param) {
             {
                 let arrayntipus = [];
                 arraytipus.forEach(function (tipus) {
-                    let numTipus = 0;
-                    pokemons.forEach(function (pokemon) { if (pokemon.type1 == tipus) numTipus++; })
-                    arrayntipus.push(tipus + ": " + numTipus);
+                    if (!tipuspreguntats.includes(tipus)) {
+                        let numTipus = 0;
+                        pokemons.forEach(function (pokemon) { if (pokemon.type1 == tipus) numTipus++; })
+                        arrayntipus.push(tipus + ": " + numTipus);
+                    }
                 });
 
                 if (arrayntipus instanceof Array) {
@@ -98,9 +106,11 @@ function getInfoPokemon(param) {
             {
                 let arrayntipus = [];
                 arraytipus.forEach(function (tipus) {
-                    let numTipus = 0;
-                    pokemons.forEach(function (pokemon) { if (pokemon.type2 == tipus) numTipus++; })
-                    arrayntipus.push(tipus + ": " + numTipus);
+                    if (!tipuspreguntats.includes(tipus)) {
+                        let numTipus = 0;
+                        pokemons.forEach(function (pokemon) { if (pokemon.type2 == tipus) numTipus++; })
+                        arrayntipus.push(tipus + ": " + numTipus);
+                    }
                 });
 
                 if (arrayntipus instanceof Array) {
@@ -118,9 +128,11 @@ function getInfoPokemon(param) {
         case "bigCounter":
             let arraycounters = [];
             arraytipus.forEach(function (tipus) {
-                let nCounter = 0;
-                pokemons.forEach(function (pokemon) { if (pokemon["against_" + tipus] > 1) nCounter++; })
-                arraycounters.push(tipus + ": " + nCounter);
+                if (!counterspreguntats.includes(tipus)) {
+                    let nCounter = 0;
+                    pokemons.forEach(function (pokemon) { if (pokemon["against_" + tipus] > 1) nCounter++; })
+                    arraycounters.push(tipus + ": " + nCounter);
+                }
             });
 
             if (arraycounters instanceof Array) {
@@ -193,6 +205,7 @@ function updatePokemons(param, si, data) {
             }
             break;
         case "counter":
+            counterspreguntats.push(data);
             if (si) {
                 pokemons = pokemons.filter(function (pokemon) { return parseInt(pokemon["against_" + data]) > 1 });
             } else {
@@ -263,6 +276,7 @@ function updatePokemons(param, si, data) {
             }
             break;
         case "tipus":
+            tipuspreguntats.push(data);
             if (si) {
                 pokemons = pokemons.filter(function (pokemon) { return pokemon.type1 == data || pokemon.type2 == data });
             } else {
@@ -278,7 +292,7 @@ function updatePokemons(param, si, data) {
             break;
         case "descripcio":
             if (si) {
-                pokemons = pokemons[0];
+                pokemons = [pokemons[0]];
             } else {
                 pokemons.shift();
             }
@@ -287,19 +301,37 @@ function updatePokemons(param, si, data) {
             console.log("Paràmatre no vàlid");
             break;
     }
+    if (pokemons.length == 1) {
+        document.getElementById("progress").style.width = "100%";
+        document.getElementById("progress").style.background = "url(src/img/correct_bg.gif) no-repeat";
+        document.getElementById("progress").style.backgroundSize = "cover";
+    } else {
+        document.getElementById("progress").style.width = 100 - (100 / (801 / pokemons.length)) + "%";
+    }
 }
 
 var conceptes1 = ["2tipus", "lastgen", "counter", "pesames"];
 var conceptes2 = ["alturahumana", "rapid", "facilcapturar"];
-var conceptes3 = ["moltavida", "bonatacf", "bonatace", "bonadefensaf", "bonadefensae", "tipus", "gen", "counter", "pesames", "mesatacf", "mesdefensaf"];
+var conceptes3 = ["tipus", "gen", "counter", "pesames", "mesatacf", "mesdefensaf"];
 var conceptes4 = ["tipus", "descripcio", "gen"];
+var conceptesdescartats = ["moltavida", "bonatacf", "bonatace", "bonadefensaf", "bonadefensae",];
 const preguntah1 = document.getElementById("preguntah1");
 const respostes = document.getElementById("respostes");
+
+function replay() {
+    respostes.innerHTML = "";
+    let button = document.createElement("button");
+    button.textContent = "Tornar a jugar";
+    respostes.appendChild(button);
+    button.addEventListener("click", function () {
+        location.reload();
+    });
+}
 
 function novapregunta() {
     var param = "";
     console.log(pokemons);
-    if (Array.isArray(pokemons) && pokemons.length > 1) {
+    if (pokemons.length > 1) {
         if (pokemons.length > 5 && conceptes3.length > 0) {
             if (conceptes1.length > 0) {
                 param = conceptes1[Math.floor(Math.random() * conceptes1.length)];
@@ -311,22 +343,39 @@ function novapregunta() {
                 param = conceptes3[Math.floor(Math.random() * conceptes3.length)];
                 conceptes3 = conceptes3.filter(function (concepte) { return concepte !== param });
             }
+            preguntar(param);
         } else {
-            if (getInfoPokemon("tipus1trobat") && getInfoPokemon("tipus2trobat")) {
-                console.log("Tipus trobat");
-                conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "tipus" });
+            if (pokemons.length < 10) {
+                if (getInfoPokemon("tipus1trobat") && getInfoPokemon("tipus2trobat")) {
+                    console.log("Tipus trobat");
+                    conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "tipus" });
+                }
+                if (getInfoPokemon("gentrobada")) {
+                    console.log("Tipus trobat");
+                    conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "gen" });
+                }
+                param = conceptes4[Math.floor(Math.random() * conceptes4.length)];
+                preguntar(param);
+            } else {
+                enviarmsg("No has proporcionat suficient informacions per endevinar el teu pokémon!");
+                replay();
             }
-            if (getInfoPokemon("gentrobada")) {
-                console.log("Tipus trobat");
-                conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "gen" });
-            }
-            param = conceptes4[Math.floor(Math.random() * conceptes4.length)];
         }
-        preguntar(param);
+    } else if (pokemons.length == 1) {
+        enviarmsg("El teu pokémon és " + pokemons[0].name, "https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemons[0].pokedex_number.padStart(3, '0') + ".png");
+        replay();
     } else {
-        enviarmsg("El teu pokémon és " + pokemons.name || pokemons[0].name, "https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemons.pokedex_number.padStart(3, '0') || pokemons[0].pokedex_number.padStart(3, '0') + ".png");
+        enviarmsg("Les teves respostes no coincideixen amb cap pokémon disponible, torna a començar o parla amb suport!");
+        replay();
     }
 }
+
+//Funció per anar a baix del chat
+function scrollChat() {
+    document.getElementById('content').scrollTop = (document.getElementById('content').scrollHeight);
+}
+
+
 
 function enviarmsg(msgtext, source) {
     console.log(msgtext);
@@ -346,14 +395,17 @@ function enviarmsg(msgtext, source) {
     let text = document.createElement("p");
     msg.appendChild(text);
     document.getElementById("content").appendChild(leftmsg);
-
     //Efecte escriure
     let index = 0;
     let interval = setInterval(function () {
+        if (index % 5 == 0) {
+            scrollChat();
+        }
         if (index < msgtext.length) {
             text.textContent += msgtext[index];
             index++;
         } else {
+            scrollChat();
             clearInterval(interval);
         }
     }, 20);
@@ -371,7 +423,6 @@ function ans(resposta) {
     text.textContent = resposta;
     msg.appendChild(text);
     document.getElementById("content").appendChild(leftmsg);
-
 }
 
 function preguntar(param) {
@@ -418,7 +469,7 @@ function preguntar(param) {
             break;
         case "counter":
             data = getInfoPokemon("bigCounter");
-            preguntespos = ["Al teu pokémon li fan counter els pokémon de tipus " + data + "?", "El teu pokémon es débil contra els pokémon de tipus " + data + "?"];
+            preguntespos = ["Al teu pokémon li fan counter els pokémon de tipus " + data + "?", "El teu pokémon és débil contra els pokémon de tipus " + data + "?"];
             positiu = true;
             enviarmsg(preguntespos[Math.floor(Math.random() * 2)]);
             break;
@@ -513,67 +564,44 @@ function preguntar(param) {
     yesbutton.addEventListener("click", function () {
         updatePokemons(param, positiu, data);
         ans("Si");
-        actualitzarProgres();
         novapregunta();
     })
     nobutton.addEventListener("click", function () {
         updatePokemons(param, !positiu, data);
         ans("No");
-        actualitzarProgres();
         novapregunta();
     })
     idkbutton.addEventListener("click", function () {
         ans("No ho sé");
-        actualitzarProgres();
         novapregunta();
     })
 
 }
 
-// console.log(pokemons);
-// updatePokemons("2tipus", false);
-// updatePokemons("mesdefensaf", false);
-// updatePokemons("mesatacf", true);
-// updatePokemons("lastgen", true);
-// updatePokemons("counter", false, "fight");
-// updatePokemons("alturahumana", false);
-// updatePokemons("rapid", false);
-// updatePokemons("facilcapturar", true);
-// updatePokemons("moltavida", false);
-// updatePokemons("bonatacf", false);
-// updatePokemons("bonatace", false);
-// updatePokemons("bonadefensaf", false);
-// updatePokemons("bonadefensae", false);
-// updatePokemons("pesames", true, 20);
-// updatePokemons("tipus", false, "electric");
-// updatePokemons("tipus", false, "grass");
+//S'inicia el so
+var audio = document.getElementById('audio');
 
-// updatePokemons("counter", true, "flying");
-// console.log(getInfoPokemon("mWeightPokemon"));
-// console.log(getInfoPokemon("bigCounter"));
-// console.log(getInfoPokemon("bigTipus"));
-// console.log(getInfoPokemon("bigGen"));
+var hasAudioStarted = false;
+document.addEventListener("click", function () {
+    if (!hasAudioStarted) {
+        audio.play();
+        hasAudioStarted = true;
+    }
+});
+
+//Botó activar/desactivar so
+document.getElementById('btnVolume').addEventListener('click', function () {
+    if (audio.paused) {
+        document.getElementById("iVolume").classList.remove("fa-volume-xmark");
+        document.getElementById("iVolume").classList.add("fa-volume-high");
+        audio.play();
+    } else {
+        document.getElementById("iVolume").classList.remove("fa-volume-high");
+        document.getElementById("iVolume").classList.add("fa-volume-xmark");
+        audio.pause();
+    }
+
+});
+
+//S'inicia el programa de preguntes
 novapregunta();
-
-
-/* Botons */
-const btnVolume = document.getElementById("btnVolume");
-const btnInfo = document.getElementById("btnInfo");
-
-btnVolume.addEventListener("click", () => {
-    document.getElementById("iVolume").classList.toggle("fa-volume-xmark");
-    
-    
-})
-
-function mostrarImatge() {
-    var imatgeContainer = document.getElementById("imatgeContainer");
-    imatgeContainer.style.display = "block";
-}
-
-function ocultarImatge() {
-    var imatgeContainer = document.getElementById("imatgeContainer");
-    imatgeContainer.style.display = "none";
-}
-
-console.log(pokemons);
