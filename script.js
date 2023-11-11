@@ -1,11 +1,11 @@
-// Realiza una solicitud XMLHttpRequest para cargar el archivo
+// Es realitza una sol.licitud XMLHttpRequest para cargar l'arxiu
 function getPokemons() {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', "pokemons.json", false); // El tercer argumento es 'false' para solicitud síncrona
+    xhr.open('GET', "pokemons.json", false); // Es fa una sol.licitud síncrona a l'arxiu "pokemons.json"
     xhr.send();
 
     if (xhr.status === 200) {
-        // Parsea el contenido JSON y almacena en la variable global
+        //Retorna el contingut en format json.
         return JSON.parse(xhr.responseText);
     }
 }
@@ -32,7 +32,10 @@ const arraytipus = [
     "flying"
 ]
 
+//S'aniràn afegint els counters ja preguntats per no repetir-los
 var tipuspreguntats = [];
+
+//S'aniràn afegint els tipus ja preguntats per no repetir-los
 var counterspreguntats = [];
 
 function getInfoPokemon(param) {
@@ -56,7 +59,7 @@ function getInfoPokemon(param) {
             return arranygen[arranygen.length - 1].split(": "[0])[0];
             break;
 
-        // Retorna un el tipus amb més Pokémons.
+        // Retorna el tipus més popular en els Pokémons.
         case "bigTipus":
             {
                 let arrayntipus = [];
@@ -80,6 +83,7 @@ function getInfoPokemon(param) {
             }
             break;
 
+        // Retorna el tipus1 més popular en els Pokémons.
         case "bigTipus1":
             {
                 let arrayntipus = [];
@@ -102,6 +106,7 @@ function getInfoPokemon(param) {
             }
             break;
 
+        // Retorna el tipus2 més popular en els Pokémons.
         case "bigTipus2":
             {
                 let arrayntipus = [];
@@ -173,6 +178,7 @@ function getInfoPokemon(param) {
     }
 }
 
+//S'eliminen els pokémons que no coincideixen amb la resposta de l'usuari
 function updatePokemons(param, si, data) {
     console.log(param, si, data);
     switch (param) {
@@ -310,12 +316,12 @@ function updatePokemons(param, si, data) {
     }
 }
 
+//Conceptes a preguntar.
 var conceptes1 = ["2tipus", "lastgen", "counter", "pesames"];
 var conceptes2 = ["alturahumana", "rapid", "facilcapturar"];
 var conceptes3 = ["tipus", "gen", "counter", "pesames", "mesatacf", "mesdefensaf"];
 var conceptes4 = ["tipus", "descripcio", "gen"];
 var conceptesdescartats = ["moltavida", "bonatacf", "bonatace", "bonadefensaf", "bonadefensae",];
-const preguntah1 = document.getElementById("preguntah1");
 const respostes = document.getElementById("respostes");
 
 function replay() {
@@ -328,6 +334,7 @@ function replay() {
     });
 }
 
+//Funció que classifica si s'ha d'enviar una nova pregunta i de quina array ha d'agafar la nova pregunta segons una serie de condicions.
 function novapregunta() {
     var param = "";
     console.log(pokemons);
@@ -345,7 +352,7 @@ function novapregunta() {
             }
             preguntar(param);
         } else {
-            if (pokemons.length < 10) {
+            if (pokemons.length < 15) {
                 if (getInfoPokemon("tipus1trobat") && getInfoPokemon("tipus2trobat")) {
                     console.log("Tipus trobat");
                     conceptes4 = conceptes4.filter(function (concepte) { return concepte !== "tipus" });
@@ -374,9 +381,7 @@ function novapregunta() {
 function scrollChat() {
     document.getElementById('content').scrollTop = (document.getElementById('content').scrollHeight);
 }
-
-
-
+//Inserta un div simulant un missatge enviat per ash.
 function enviarmsg(msgtext, source) {
     console.log(msgtext);
     console.log(source);
